@@ -1,5 +1,3 @@
-from warnings import catch_warnings
-
 import yt_dlp
 
 from .step import Step
@@ -20,21 +18,21 @@ class DownloadCaptions(Step):
         # YouTube 影片的網址
         #video_url = 'https://www.youtube.com/watch?v=4HSUztF59zo'
 
-        for video_url in data:
-            print('Downloading caption for ', video_url)
-            if utils.caption_file_exists(video_url):
+        for yt in data:
+            print('Downloading caption for ', yt.id)
+            if utils.caption_file_exists(yt):
                 print('found existing caption file')
                 continue
 
-            ydl_opts['outtmpl'] = utils.get_caption_path(video_url)
+            ydl_opts['outtmpl'] = yt.caption_filepath
 
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                    ydl.download(video_url)
+                    ydl.download(yt.url)
 
-                utils.convert_vtt_to_srt(video_url)
+                utils.convert_vtt_to_srt(yt)
             except (KeyError, AttributeError):
-                print('Error when downloading caption for ', video_url)
+                print('Error when downloading caption for ', yt.url)
                 continue
 
-        return
+        return data
