@@ -1,5 +1,6 @@
 from yt_concate.pipeline.pipeline import Pipeline
 from yt_concate.pipeline.steps.download_videos import DownloadVideos
+from yt_concate.pipeline.steps.edit_video import EditVideo
 from yt_concate.pipeline.steps.get_video_list import GetVideoList
 from yt_concate.pipeline.steps.download_captions import DownloadCaptions
 from yt_concate.pipeline.steps.initialize_yt import InitializeYT
@@ -21,12 +22,14 @@ def main():
         ReadCaptions(),
         Search(),
         DownloadVideos(),
+        EditVideo(),
         Postflight(),
     ]
 
     inputs = {
         'channel_id': CHANNEL_ID,
         'search_word': 'incredible',
+        'limit': 70,
     }
 
     utils = Utils()
