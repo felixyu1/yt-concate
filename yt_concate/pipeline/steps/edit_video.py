@@ -1,15 +1,15 @@
 from .step import Step
 
-import subprocess
+import logging
 
 from moviepy.editor import VideoFileClip, concatenate_videoclips
 
 class EditVideo(Step):
     def process(self, data, inputs, utils):
-
+        logger = logging.getLogger()
         clips = []
         for found in data:
-            print(found.time)
+            logger.debug(found.time)
             start, end = self.parse_caption_time(found.time)
             video_clip = VideoFileClip(utils.get_video_real_filename(found.yt)).subclip(start, end)
             clips.append(video_clip)

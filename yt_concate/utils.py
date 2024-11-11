@@ -1,6 +1,7 @@
 import os
 import fnmatch
 import subprocess
+import logging
 
 from yt_concate.settings import CAPTIONS_DIR, VIDEO_FILE_EXT
 from yt_concate.settings import CAPTION_FILE_EXT_EN_SRT
@@ -8,7 +9,8 @@ from yt_concate.settings import CAPTION_FILE_EXT_EN_VTT
 from yt_concate.settings import DOWNLOADS_DIR
 from yt_concate.settings import VIDEOS_DIR
 from yt_concate.settings import OUTPUTS_DIR
-
+from yt_concate.settings import LOGS_DIR
+from yt_concate.settings import FILE_LOGGING_LEVEL
 
 class Utils:
     def __init__(self):
@@ -19,6 +21,37 @@ class Utils:
         os.makedirs(VIDEOS_DIR, exist_ok=True)
         os.makedirs(CAPTIONS_DIR, exist_ok=True)
         os.makedirs(OUTPUTS_DIR, exist_ok=True)
+        os.makedirs(LOGS_DIR, exist_ok=True)
+
+    @staticmethod
+    def remove_all_files_in_dir(directory):
+        for f in os.listdir(directory):
+            os.remove(os.path.join(directory, f))
+
+    def remove_downloaded_files(self):
+        directory = CAPTIONS_DIR
+        self.remove_all_files_in_dir(directory)
+        directory = VIDEOS_DIR
+        self.remove_all_files_in_dir(directory)
+
+    @staticmethod
+    def init_logger(stdout_logging_level):
+        logger = logging.getLogger()
+        logger.setLevel(logging.NOTSET)
+
+        formatter = logging.Formatter('%(levelname)s:%(asctime)s:%(message)s')
+
+        file_handler = logging.FileHandler(os.path.join(LOGS_DIR, 'yt_concate.log'))
+        file_handler.setLevel(FILE_LOGGING_LEVEL)
+        file_handler.setFormatter(formatter)
+
+        logger.addHandler(file_handler)
+
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(stdout_logging_level)
+        stream_handler.setFormatter(formatter)
+
+        logger.addHandler(stream_handler)
 
     def get_video_list_file_path(self, channel_id):
         return os.path.join(DOWNLOADS_DIR, channel_id + '.txt')

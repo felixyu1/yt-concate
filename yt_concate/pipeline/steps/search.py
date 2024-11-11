@@ -1,9 +1,11 @@
 from .step import Step
 from ...model.found import Found
+import logging
 
 
 class Search(Step):
     def process(self, data, inputs, utils):
+        logger = logging.getLogger()
         search_word = inputs['search_word']
 
         found = []
@@ -17,6 +19,6 @@ class Search(Step):
                     time = captions[caption]
                     f = Found(yt, caption, time)
                     found.append(f)
-        print(found)
-        print(len(found))
+        logger.info(found)
+        logger.info(len(found))
         return found

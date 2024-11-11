@@ -1,6 +1,10 @@
 from .step import Step
-
+import logging
 
 class Postflight(Step):
     def process(self, data, inputs, utils):
-        print('In Postflight...')
+        logger = logging.getLogger()
+        logger.info('In Postflight...')
+        cleanUp = inputs['cleanUp']
+        if cleanUp == 'True':
+            utils.remove_downloaded_files()
